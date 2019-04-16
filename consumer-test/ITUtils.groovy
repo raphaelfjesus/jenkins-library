@@ -32,8 +32,8 @@ class ITUtils {
     static def notifyGithub(state, description) {
         println "[INFO] Notifying about state '${state}' for commit '${commitHash}'."
 
-        def http = new RESTClient("https://api.github" +
-            ".com/repos/o-liver/jenkins-library/statuses/${commitHash}")
+        def http = new RESTClient("https://api.github.com/repos/SAP/jenkins-library/statuses/" +
+            "${commitHash}")
         http.headers['User-Agent'] = 'groovy-script'
         http.headers['Authorization'] = "token ${System.getenv('INTEGRATION_TEST_VOTING_TOKEN')}"
 

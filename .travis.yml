@@ -1,6 +1,6 @@
 branches:
   only:
-  - groovyIntegrationTests
+  - master
   - /^it\/.*$/
 language: groovy
 sudo: required
