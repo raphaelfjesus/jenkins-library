@@ -26,7 +26,7 @@ ITUtils.repositoryUnderTest = System.getenv('TRAVIS_REPO_SLUG') ?: 'SAP/jenkins-
 //This auxiliary thread is needed in order to produce some output while the
 //test are running. Otherwise the job will be canceled after 10 minutes without output.
 def auxiliaryThread = Thread.start {
-    sleep(10000)
+    Thread.sleep(10000)
     println "[INFO] Integration tests still running."
 }
 
