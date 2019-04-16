@@ -62,9 +62,6 @@ class TestRunnerThread extends Thread {
     private void executeShell(command) {
         def stdOut = new StringBuilder(), stdErr = new StringBuilder()
         def process = command.execute()
-//        new File("log.txt").withWriter { writer ->
-//            process.consumeProcessOutputStream(writer)
-//        }
         process.waitForProcessOutput(stdOut, stdErr)
         int exitCode = process.exitValue()
         if (exitCode>0) {
