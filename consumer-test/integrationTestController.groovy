@@ -23,20 +23,14 @@ ITUtils.workspacesRootDir = WORKSPACES_ROOT
 ITUtils.libraryVersionUnderTest = "git log --format=%H -n 1".execute().text.trim()
 ITUtils.repositoryUnderTest = System.getenv('TRAVIS_REPO_SLUG') ?: 'SAP/jenkins-library'
 
-//This auxiliary thread is needed in order to produce some output while the
-//test are running. Otherwise the job will be canceled after 10 minutes without output.
-def auxiliaryThread = Thread.start {
-    Thread.sleep(10000)
-    println "[INFO] Integration tests still running."
-}
-
 def testCaseThreads = listTestCaseThreads()
 testCaseThreads.each { it ->
     it.start()
-    it.join()
 }
 
-auxiliaryThread.join()
+//This method will print to console while the test cases are running
+//Otherwise the job will be canceled after 10 minutes without output.
+waitForTestCases(testCaseThreads)
 
 ITUtils.notifyGithub("success", "The integration tests succeeded.")
 
@@ -49,4 +43,23 @@ def listTestCaseThreads() {
         threads << new TestRunnerThread(file.toString())
     }
     return threads
+}
+
+def waitForTestCases(threadList) {
+    List.metaClass.anyThreadStillAlive = {
+        for (thread in delegate) {
+            if(thread.isAlive()) {
+                return true
+            }
+        }
+        return false
+    }
+
+    def auxiliaryThread = Thread.start {
+        while (threadList.anyThreadStillAlive()) {
+            println "[INFO] Integration tests are still running."
+            sleep(10000)
+        }
+    }
+    auxiliaryThread.join()
 }

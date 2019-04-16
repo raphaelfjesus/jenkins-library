@@ -9,7 +9,8 @@ class TestRunnerThread extends Thread {
 
     public TestRunnerThread(testCaseFilePath) {
         // Regex pattern expects a folder structure such as '/rootDir/areaDir/testCase.extension'
-        def testCaseMatches = (testCaseFilePath.toString() =~ /^[\w\-]+\\/([\w\-]+)\\/([\w\-]+)\..*\u0024/)
+        def testCaseMatches = (testCaseFilePath.toString() =~
+            /^[\w\-]+\\/([\w\-]+)\\/([\w\-]+)\..*\u0024/)
         this.area = testCaseMatches[0][1]
         this.testCase = testCaseMatches[0][2]
         this.testCaseRootDir = "${ITUtils.workspacesRootDir}/${area}/${testCase}"
@@ -48,7 +49,8 @@ class TestRunnerThread extends Thread {
         target.write(sourceText)
     }
 
-    // Force usage of library version under test by setting it in the Jenkinsfile which is then the first definition and thus has the highest precedence
+    // Force usage of library version under test by setting it in the Jenkinsfile,
+    // which is then the first definition and thus has the highest precedence.
     private void manipulateJenkinsfile() {
         def jenkinsfile = new File("${testCaseWorkspace}/Jenkinsfile")
         def manipulatedText =
